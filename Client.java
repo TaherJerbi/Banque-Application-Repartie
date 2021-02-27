@@ -79,10 +79,10 @@ import java.util.Scanner;
                         break;
                 }
 
-            } while (res!="Q");
+            } while (res.charAt(0)!='Q');
             
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
         }
     }

@@ -7,29 +7,49 @@ public class BanqueDistant implements Banque{
         comptes = new HashMap<String,Compte>();
         operations = new ArrayList<String>();
     }
+
     public boolean etatCompte(String id){
-        if(compteExiste(id))
-            return comptes.get(id).getSolde() > 0;
-        else{
-            System.out.println("Le compte "+id+" n'existe pas");
-            return false;
+        if(compteExiste(id)){
+            boolean etat = comptes.get(id).getSolde() > 0;
+            operations.add("Verification de l'état du compte "+id +" : "+ (etat ? "OK" : "ROUGE"));
+            return etat;
         }
+        else{
+                System.err.println("Operation impossible, compte inexistant : " + id);
+                return false;
+            }
     }
     public float ajouterSurCompte(String id, float amount){
-        comptes.get(id).changeSolde(+amount);
-        return comptes.get(id).getSolde();
+        if(compteExiste(id))
+        {
+            comptes.get(id).changeSolde(+amount);
+            operations.add("Ajout de "+amount+"dans le compte "+id);
+            return comptes.get(id).getSolde();
+        }else{
+            System.err.println("Operation impossible, compte inexistant : " + id);
+            return 0;
+        }
     }
     public float enleverSurCompte(String id, float amount){
-        comptes.get(id).changeSolde(-amount);
-        return comptes.get(id).getSolde();
+        if(compteExiste(id)){
+            comptes.get(id).changeSolde(-amount);
+            operations.add("Retrait de "+amount+" du compte "+id);
+            return comptes.get(id).getSolde();
+        }
+        else{
+            System.err.println("Operation impossible, compte inexistant : " + id);
+            return 0;
+        }
+        
     } 
     public float getValeurCompte(String id){
+        operations.add("Consultation du solde de "+id);
         return comptes.get(id).getSolde();
     }
     public boolean transfertEntreCompte(String id1,String id2, float amount){
         if(!compteExiste(id1) || !compteExiste(id2))
         {
-            System.out.println("Operation impossible, compte inexistant : " + (compteExiste(id1) ? id2 : id1));
+            System.err.println("Operation impossible, compte inexistant : " + (compteExiste(id1) ? id2 : id1));
             return false;
         }
         Compte c1 = comptes.get(id1);
@@ -37,6 +57,7 @@ public class BanqueDistant implements Banque{
         if(id1!=id2){
             c1.changeSolde(-amount);
             c2.changeSolde(+amount);
+            operations.add("Transfert de "+amount+" "+id1+"->"+id2);
             return true;
         }else{
             System.out.println("Operation impossible");
@@ -50,7 +71,10 @@ public class BanqueDistant implements Banque{
     public String creationCompte(){
         Compte c = new Compte();
         comptes.put(c.getId(),c);
-        operations.add(operations.size()+". Creation du compte "+c.getId());
+        operations.add("Creation du compte "+c.getId());
         return c.getId();
+    }
+    public ArrayList<String> getOperations(){
+        return this.operations;
     }
 }

@@ -1,5 +1,6 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public interface Banque extends Remote{
     boolean etatCompte(String id) throws RemoteException;
@@ -9,4 +10,5 @@ public interface Banque extends Remote{
     boolean transfertEntreCompte(String id1,String id2, float amount) throws RemoteException;
     String creationCompte() throws RemoteException;
     boolean compteExiste(String id) throws RemoteException;
+    ArrayList<String> getOperations() throws RemoteException;
 }
